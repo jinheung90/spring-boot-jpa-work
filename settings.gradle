@@ -1,0 +1,11 @@
+rootProject.name = 'jinheung'
+include 'jinheung-api-gateway'
+include 'jinheung-user-profile'
+include 'jinheung-eureka-server'
+include 'common-module'
+
+include 'shop-search'
+include 'shop-stock'
+include 'shop-main'
+
+include 'client-proxy'

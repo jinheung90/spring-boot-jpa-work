@@ -1,0 +1,101 @@
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+
+	<appender name="STDOUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--		<target>System.out</target>-->
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>${CONSOLE_LOG_CHARSET}</charset>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/logs/stdout.%d{yyyy-MM-dd}.json</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="STDERR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>${CONSOLE_LOG_CHARSET}</charset>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/logs/stderr.%d{yyyy-MM-dd}.json</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+
+
+	<appender name="LOCAL_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--		<target>System.out</target>-->
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>${CONSOLE_LOG_CHARSET}</charset>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./stdout.%d{yyyy-MM-dd}.json</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="LOCAL_ERR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<!--		<target>System.err</target>-->
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+			<!--			<jsonGeneratorDecorator class="kr.co.eda.kbn.logback.PrettyPrintingDecorator"/>-->
+			<!--			<jsonFactoryDecorator class="kr.co.eda.kbn.logback.ISO8601DateDecorator"/>-->
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./stderr.st%d{yyyy-MM-dd}.json</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+
+	<springProfile name="prod">
+		<logger name="com.jinheung.project" level="INFO" additivity="true">
+			<appender-ref ref="STDOUT" />
+		</logger>
+		<root level="INFO">
+			<appender-ref ref="STDERR" />
+		</root>
+
+	</springProfile>
+
+
+	<springProfile name="local">
+
+		<logger name="com.jinheung.project" level="INFO" additivity="true">
+			<appender-ref ref="LOCAL_OUT" />
+		</logger>
+		<root level="INFO">
+			<appender-ref ref="LOCAL_ERR" />
+			<appender-ref ref="CONSOLE"/>
+		</root>
+
+	</springProfile>
+
+	<springProfile name="develop">
+		<logger name="com.jinheung.project" level="INFO" additivity="true">
+			<appender-ref ref="STDOUT" />
+		</logger>
+		<root level="INFO">
+			<appender-ref ref="STDERR" />
+		</root>
+
+	</springProfile>
+</configuration>
